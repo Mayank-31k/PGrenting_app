@@ -1,0 +1,226 @@
+.filters {
+  width: 320px;
+  background: var(--white);
+  border: 2px solid var(--barca-blue);
+  padding: 28px;
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+  box-shadow: 0 6px 20px rgba(0, 77, 152, 0.15);
+  margin-right: 20px;
+  border-radius: 4px;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid var(--barca-red);
+  position: relative;
+}
+
+.filters-header h3 {
+  margin: 0;
+  color: var(--barca-blue);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--barca-red);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Space Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.clear-btn:hover {
+  opacity: 0.7;
+}
+
+.filter-group {
+  margin-bottom: 28px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: var(--barca-blue);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-input,
+.filter-select {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--border-light);
+  background: var(--white);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s ease;
+  border-radius: 2px;
+  margin-bottom: 4px;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  border-color: var(--barca-blue);
+  box-shadow: 0 0 0 1px var(--barca-blue);
+}
+
+.filter-input::placeholder {
+  color: var(--light-text);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.facilities-dropdown {
+  position: relative;
+}
+
+.facilities-toggle {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--border-light);
+  background: var(--white);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--barca-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  border-radius: 2px;
+  outline: none;
+}
+
+.facilities-toggle:hover {
+  border-color: var(--barca-blue);
+}
+
+.facilities-toggle:focus {
+  border-color: var(--barca-blue);
+  box-shadow: 0 0 0 1px var(--barca-blue);
+}
+
+.dropdown-arrow {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+  color: var(--barca-red);
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.facilities-grid {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border: 2px solid var(--barca-blue);
+  border-top: none;
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0, 77, 152, 0.15);
+  border-radius: 0 0 2px 2px;
+}
+
+.facility-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-light);
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.facility-checkbox:hover {
+  background-color: rgba(0, 77, 152, 0.08);
+  padding-left: 22px;
+  border-left: 4px solid var(--barca-red);
+}
+
+.facility-checkbox input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--barca-blue);
+  flex-shrink: 0;
+}
+
+.facility-checkbox span {
+  color: var(--dark-text);
+  transition: color 0.2s ease;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+}
+
+.facility-checkbox:hover span {
+  color: var(--barca-blue);
+}
+
+.facility-checkbox input[type="checkbox"]:checked + span {
+  color: var(--barca-red);
+  font-weight: 700;
+}
+
+.facility-checkbox:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .filters {
+    width: 100%;
+    position: static;
+    margin-bottom: 24px;
+    margin-right: 0;
+    top: auto;
+    padding: 24px;
+  }
+  
+  .filter-group {
+    margin-bottom: 24px;
+  }
+  
+  .facilities-grid {
+    max-height: 200px;
+  }
+  
+  .facility-checkbox {
+    padding: 12px 16px;
+  }
+  
+  .facility-checkbox:hover {
+    padding-left: 20px;
+  }
+}

@@ -1,0 +1,84 @@
+:root {
+  --barca-blue: #004d98;
+  --barca-red: #dc143c;
+  --barca-dark-blue: #003366;
+  --barca-light-blue: #1e5fa8;
+  --dark-text: #1a1a1a;
+  --light-text: #666666;
+  --background: #fafafa;
+  --white: #ffffff;
+  --border-light: #e0e0e0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Mono', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  color: var(--dark-text);
+  line-height: 1.6;
+}
+
+code {
+  font-family: 'Space Mono', monospace;
+}
+
+* {
+  font-family: 'Space Mono', monospace;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background: var(--barca-blue);
+  color: var(--white);
+  padding: 12px 24px;
+}
+
+.btn-primary:hover {
+  background: var(--barca-dark-blue);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--barca-blue);
+  border: 2px solid var(--barca-blue);
+  padding: 10px 22px;
+}
+
+.btn-secondary:hover {
+  background: var(--barca-blue);
+  color: var(--white);
+}
+
+.btn-accent {
+  background: var(--barca-red);
+  color: var(--white);
+  padding: 12px 24px;
+}
+
+.btn-accent:hover {
+  background: #b91c3c;
+}
