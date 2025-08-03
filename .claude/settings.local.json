@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(node:*)",
+      "Bash(npm start)",
+      "Bash(npm cache clean:*)",
+      "Bash(rmdir:*)",
+      "Bash(rm:*)",
+      "Bash(npx react-scripts:*)",
+      "Bash(cp:*)",
+      "Bash(npm run production:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm run dev:*)",
+      "Bash(where node)",
+      "Bash(\"C:\\Program Files\\nodejs\\node.exe\" start.js)",
+      "Bash(\"C:\\Program Files\\nodejs\\node.exe\" \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js\" start)",
+      "Bash(\"C:\\Program Files\\nodejs\\node.exe\" \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js\" install)",
+      "Bash(\"C:\\Program Files\\nodejs\\node.exe\" \"./node_modules/react-scripts/scripts/start.js\")",
+      "Bash(\"C:\\Program Files\\nodejs\\node.exe\" server/server.js)",
+      "Bash(\"C:\\Program Files\\nodejs\\node.exe\" server/simple-server.js)",
+      "Bash(npm run server:*)",
+      "Bash(grep:*)"
+    ],
+    "deny": []
+  }
+}
