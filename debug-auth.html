@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PG Renter Auth Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>PG Renter Authentication Debug</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Auth Server Connection</h2>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <div id="health-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test User Registration</h2>
+        <input type="text" id="reg-name" placeholder="Name" value="Test User">
+        <input type="email" id="reg-email" placeholder="Email" value="debug@test.com">
+        <input type="password" id="reg-password" placeholder="Password" value="test123">
+        <button onclick="testRegister()">Register</button>
+        <div id="register-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test User Login</h2>
+        <input type="email" id="login-email" placeholder="Email" value="debug@test.com">
+        <input type="password" id="login-password" placeholder="Password" value="test123">
+        <button onclick="testLogin()">Login</button>
+        <div id="login-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Test PG Data</h2>
+        <button onclick="testPGs()">Fetch PG Data</button>
+        <div id="pg-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5004';
+        
+        async function makeRequest(url, options = {}) {
+            try {
+                console.log('Making request to:', url);
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch {
+                    data = text;
+                }
+                
+                return {
+                    ok: response.ok,
+                    status: response.status,
+                    data: data
+                };
+            } catch (error) {
+                console.error('Request error:', error);
+                return {
+                    ok: false,
+                    error: error.message
+                };
+            }
+        }
+        
+        async function testHealth() {
+            const result = await makeRequest(`${API_BASE}/api/health`);
+            const element = document.getElementById('health-result');
+            
+            if (result.ok) {
+                element.className = 'result success';
+                element.innerHTML = `✅ Success: ${JSON.stringify(result.data, null, 2)}`;
+            } else {
+                element.className = 'result error';
+                element.innerHTML = `❌ Error: ${result.error || JSON.stringify(result.data)}`;
+            }
+        }
+        
+        async function testRegister() {
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            
+            const result = await makeRequest(`${API_BASE}/api/auth/register`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password,
+                    confirmPassword: password
+                })
+            });
+            
+            const element = document.getElementById('register-result');
+            
+            if (result.ok) {
+                element.className = 'result success';
+                element.innerHTML = `✅ Registration Success: User created with token`;
+            } else {
+                element.className = 'result error';
+                element.innerHTML = `❌ Registration Error: ${result.data?.error || result.error}`;
+            }
+        }
+        
+        async function testLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const result = await makeRequest(`${API_BASE}/api/auth/login`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+            
+            const element = document.getElementById('login-result');
+            
+            if (result.ok) {
+                element.className = 'result success';
+                element.innerHTML = `✅ Login Success: ${result.data.user?.name}`;
+            } else {
+                element.className = 'result error';
+                element.innerHTML = `❌ Login Error: ${result.data?.error || result.error}`;
+            }
+        }
+        
+        async function testPGs() {
+            const result = await makeRequest(`${API_BASE}/api/pgs`);
+            const element = document.getElementById('pg-result');
+            
+            if (result.ok) {
+                element.className = 'result success';
+                element.innerHTML = `✅ PG Data Success: Found ${result.data.length} PGs`;
+            } else {
+                element.className = 'result error';
+                element.innerHTML = `❌ PG Data Error: ${result.error || JSON.stringify(result.data)}`;
+            }
+        }
+        
+        // Auto-test health on load
+        window.onload = testHealth;
+    </script>
+</body>
+</html>

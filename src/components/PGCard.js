@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './PGCard.css';
-import PGDetailsModal from './PGDetailsModal';
 
-const PGCard = ({ pg }) => {
-  const [showModal, setShowModal] = useState(false);
+const PGCard = ({ pg, user, onInquiry, onShowPGDetail }) => {
 
   return (
     <div className="pg-card">
@@ -40,26 +38,24 @@ const PGCard = ({ pg }) => {
         <div className="pg-actions">
           <button 
             className="details-btn"
-            onClick={() => {
-              console.log('Opening modal for:', pg.name);
-              setShowModal(true);
-            }}
+            onClick={() => onShowPGDetail(pg)}
           >
             VIEW DETAILS
           </button>
-          <button className="contact-btn">CONTACT OWNER</button>
+          {user ? (
+            <button 
+              className="contact-btn"
+              onClick={() => onShowPGDetail(pg)}
+            >
+              SEND INQUIRY
+            </button>
+          ) : (
+            <button className="contact-btn disabled">
+              LOGIN TO INQUIRE
+            </button>
+          )}
         </div>
       </div>
-      
-      {showModal && (
-        <PGDetailsModal 
-          pg={pg} 
-          onClose={() => {
-            console.log('Closing modal');
-            setShowModal(false);
-          }} 
-        />
-      )}
     </div>
   );
 };

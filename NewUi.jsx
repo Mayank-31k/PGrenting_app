@@ -1,23 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, MapPin, Star, Shield, Clock, DollarSign, Zap, Facebook, Twitter, Instagram, Linkedin, Play, ArrowRight, CheckCircle } from 'lucide-react';
-import Login from './components/Login';
-import Register from './components/Register';
-import UserProfile from './components/UserProfile';
-import PGList from './components/PGList';
-import PGDetail from './components/PGDetail';
-import Filters from './components/Filters';
-import { samplePGData } from './data/sampleData';
 
-const App = () => {
-  const [currentView, setCurrentView] = useState('landing'); // 'landing', 'browse', 'profile'
-  const [authModal, setAuthModal] = useState(null); // null, 'login', 'register'
-  const [user, setUser] = useState(null);
-  const [selectedPG, setSelectedPG] = useState(null);
-  const [showProfile, setShowProfile] = useState(false);
-  const [pgs, setPgs] = useState([]);
-  const [filteredPGs, setFilteredPGs] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+const PGRenterWebsite = () => {
+  const [activeNav, setActiveNav] = useState('');
 
   // Add Google Fonts link
   React.useEffect(() => {
@@ -27,168 +12,6 @@ const App = () => {
     document.head.appendChild(link);
   }, []);
 
-  // Function to fetch PG data from MongoDB
-  const fetchPGs = async (filters = {}) => {
-    try {
-      setIsLoading(true);
-      const queryParams = new URLSearchParams();
-      
-      if (filters.city) queryParams.append('city', filters.city);
-      if (filters.gender) queryParams.append('gender', filters.gender);
-      if (filters.minRent) queryParams.append('minRent', filters.minRent);
-      if (filters.maxRent) queryParams.append('maxRent', filters.maxRent);
-      if (filters.facilities && filters.facilities.length > 0) {
-        queryParams.append('facilities', filters.facilities.join(','));
-      }
-      
-      const url = `http://localhost:5004/api/pgs${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch PGs');
-      }
-      
-      const data = await response.json();
-      
-      // Transform MongoDB data to match frontend format
-      const transformedData = data.map(pg => ({
-        id: pg._id,
-        name: pg.name,
-        location: pg.location.address,
-        rent: pg.pricing.rent,
-        gender: pg.accommodation.gender === 'male' ? 'Boys' : pg.accommodation.gender === 'female' ? 'Girls' : 'Mixed',
-        distanceFromCollege: pg.distance || '1-2 km from DTU',
-        image: pg.images[0]?.url || 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=300&fit=crop',
-        facilities: pg.getAllFacilities ? pg.getAllFacilities() : Object.keys({...pg.facilities.basic, ...pg.facilities.amenities, ...pg.facilities.services}).filter(key => pg.facilities.basic[key] || pg.facilities.amenities[key] || pg.facilities.services[key]),
-        owner: pg.owner?.name || 'PG Owner',
-        phone: pg.contact.phone,
-        sharing: pg.accommodation.roomTypes[0]?.description || 'Double/Triple sharing',
-        deposit: pg.pricing.securityDeposit,
-        food: pg.pricing.maintenanceCharges ? 'Meals available' : 'Self-cooking'
-      }));
-      
-      setPgs(transformedData);
-      setFilteredPGs(transformedData);
-    } catch (error) {
-      console.error('Error fetching PGs:', error);
-      // Fallback to sample data if API fails
-      setPgs(samplePGData);
-      setFilteredPGs(samplePGData);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Check for existing user session on app load
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
-    if (token && userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-      }
-    }
-    
-    // Load PG data when app starts
-    fetchPGs();
-  }, []);
-
-  const handleLogin = (userData) => {
-    setUser(userData);
-    setAuthModal(null);
-    console.log('Login successful:', userData);
-    
-    // Show success message
-    if (userData.provider === 'google') {
-      alert(`Welcome ${userData.name}! You've successfully signed in with Google.`);
-    } else {
-      alert(`Welcome ${userData.name}! You've successfully signed in.`);
-    }
-  };
-
-  const handleRegister = (userData) => {
-    setUser(userData);
-    setAuthModal(null);
-    console.log('Registration successful:', userData);
-    
-    // Show success message
-    if (userData.provider === 'google') {
-      alert(`Welcome ${userData.name}! Your account has been created successfully with Google.`);
-    } else {
-      alert(`Welcome ${userData.name}! Your account has been created successfully.`);
-    }
-  };
-
-  const handleLogout = () => {
-    // Clear user state and localStorage
-    setUser(null);
-    setShowProfile(false);
-    setCurrentView('landing');
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    console.log('User logged out');
-  };
-
-  const handleShowProfile = () => {
-    setShowProfile(true);
-  };
-
-  const handleCloseProfile = () => {
-    setShowProfile(false);
-  };
-
-  const handleShowPGDetail = (pg) => {
-    setSelectedPG(pg);
-  };
-
-  const handleClosePGDetail = () => {
-    setSelectedPG(null);
-  };
-
-  const handleUpdateProfile = (updatedUser) => {
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    console.log('Profile updated:', updatedUser);
-  };
-
-  const handleInquiry = (inquiryData) => {
-    console.log('Inquiry submitted:', inquiryData);
-    alert('Your inquiry has been sent successfully! The PG owner will contact you soon.');
-  };
-
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-    filterPGs(term, null);
-  };
-
-  const handleFilter = (filters) => {
-    // Use API-based filtering for better performance
-    fetchPGs(filters);
-  };
-
-  const filterPGs = (search, filters) => {
-    // Client-side filtering for search terms only
-    let filtered = pgs;
-
-    if (search) {
-      filtered = filtered.filter(pg => 
-        pg.name.toLowerCase().includes(search.toLowerCase()) ||
-        pg.location.toLowerCase().includes(search.toLowerCase()) ||
-        pg.facilities.some(facility => 
-          facility.toLowerCase().includes(search.toLowerCase())
-        )
-      );
-    }
-
-    setFilteredPGs(filtered);
-  };
-
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Header */}
@@ -196,25 +19,10 @@ const App = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
-              <h1 
-                className="text-xl font-bold cursor-pointer" 
-                onClick={() => setCurrentView('landing')}
-              >
-                PG RENTER
-              </h1>
+              <h1 className="text-xl font-bold">PG RENTER</h1>
               <nav className="hidden md:flex items-center gap-6">
-                <button 
-                  onClick={() => setCurrentView('landing')}
-                  className={`text-sm hover:text-black ${currentView === 'landing' ? 'text-black font-medium' : 'text-gray-700'}`}
-                >
-                  Home
-                </button>
-                <button 
-                  onClick={() => setCurrentView('browse')}
-                  className={`text-sm hover:text-black ${currentView === 'browse' ? 'text-black font-medium' : 'text-gray-700'}`}
-                >
-                  Search PGs
-                </button>
+                <a href="#" className="text-sm text-gray-700 hover:text-black">Home</a>
+                <a href="#" className="text-sm text-gray-700 hover:text-black">Search PGs</a>
                 <a href="#" className="text-sm text-gray-700 hover:text-black">About</a>
               </nav>
             </div>
@@ -223,47 +31,19 @@ const App = () => {
                 <Search className="w-4 h-4 text-gray-500 mr-2" />
                 <input type="text" placeholder="Search by location" className="bg-transparent text-sm outline-none" />
               </div>
-              {user ? (
-                <div className="flex items-center gap-4">
-                  <button 
-                    onClick={handleShowProfile}
-                    className="text-sm text-gray-700 hover:text-black font-medium"
-                  >
-                    👤 {user.name}
-                  </button>
-                  <button 
-                    onClick={handleLogout}
-                    className="text-sm text-gray-700 hover:text-black font-medium"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <button 
-                    onClick={() => setAuthModal('login')}
-                    className="text-sm text-gray-700 hover:text-black font-medium"
-                  >
-                    Login
-                  </button>
-                  <button 
-                    onClick={() => setAuthModal('register')}
-                    className="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition-colors"
-                  >
-                    Register
-                  </button>
-                </>
-              )}
+              <button className="text-sm text-gray-700 hover:text-black font-medium">
+                Login
+              </button>
+              <button className="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition-colors">
+                Register
+              </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content Area */}
-      {currentView === 'landing' && (
-        <>
-          {/* Hero Section */}
-          <section className="container mx-auto px-4 py-8 md:py-12">
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-8 md:py-12">
         <div className="text-center mb-8 md:mb-12">
           <div className="flex items-center justify-center gap-2 mb-4">
             <span className="text-lg">🎓</span>
@@ -293,10 +73,7 @@ const App = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={() => setCurrentView('browse')}
-              className="bg-black text-white px-6 py-3 rounded-full text-sm hover:bg-gray-800 transition-colors transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
-            >
+            <button className="bg-black text-white px-6 py-3 rounded-full text-sm hover:bg-gray-800 transition-colors transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
               START SEARCHING <ArrowRight className="w-4 h-4" />
             </button>
             <button className="border border-gray-300 text-gray-700 px-6 py-3 rounded-full text-sm hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
@@ -363,142 +140,82 @@ const App = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="group cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100">
-            <div className="relative h-48 overflow-hidden">
+        <div className="space-y-6">
+          <div className="group cursor-pointer flex gap-4 p-4 rounded-xl hover:bg-gray-50 transition-all">
+            <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden rounded-xl shadow-md group-hover:shadow-xl transition-all duration-300">
               <img 
-                src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600" 
+                src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400" 
                 alt="Elite Boys PG"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy"
               />
-              <div className="absolute top-3 right-3 bg-black bg-opacity-70 text-white px-2 py-1 rounded-md text-xs font-medium">
-                Boys
-              </div>
-              <div className="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded-md text-xs font-medium">
-                Verified
-              </div>
             </div>
-            <div className="p-4">
-              <h4 className="font-semibold text-lg mb-2 group-hover:text-orange-600 transition-colors">Elite Boys PG</h4>
-              <div className="flex items-center gap-1 mb-2">
-                <MapPin className="w-4 h-4 text-gray-500" />
-                <p className="text-sm text-gray-600">Shahbad Daulatpur, Near DTU</p>
-              </div>
-              <div className="flex items-center gap-1 mb-3">
-                <Clock className="w-4 h-4 text-gray-500" />
-                <p className="text-sm text-gray-600">0.5km from college • 5 min walk</p>
-              </div>
-              <div className="flex items-center justify-between mb-3">
+            <div className="flex-1">
+              <h4 className="font-semibold text-lg mb-1 group-hover:text-orange-600 transition-colors">Elite Boys PG</h4>
+              <p className="text-sm text-gray-600 mb-1 flex items-center gap-1">
+                <MapPin className="w-3 h-3" /> 0.5km from college
+              </p>
+              <div className="flex items-center justify-between">
+                <p className="font-semibold text-lg">₹8,500/mo</p>
                 <div className="flex text-yellow-400 text-sm">
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
-                  <span className="text-gray-600 ml-1 font-medium">5.0 (24)</span>
                 </div>
-                <p className="font-bold text-xl text-green-600">₹8,500</p>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3">
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">WiFi</span>
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">AC</span>
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">Meals</span>
-                <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">+3 more</span>
-              </div>
-              <p className="text-xs text-gray-500">Double/Triple sharing • ₹15,000 deposit</p>
             </div>
           </div>
 
-          <div className="group cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100">
-            <div className="relative h-48 overflow-hidden">
+          <div className="group cursor-pointer flex gap-4 p-4 rounded-xl hover:bg-gray-50 transition-all">
+            <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden rounded-xl shadow-md group-hover:shadow-xl transition-all duration-300">
               <img 
-                src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600" 
+                src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400" 
                 alt="Green Valley Girls"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy"
               />
-              <div className="absolute top-3 right-3 bg-pink-500 bg-opacity-90 text-white px-2 py-1 rounded-md text-xs font-medium">
-                Girls
-              </div>
-              <div className="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded-md text-xs font-medium">
-                Verified
-              </div>
             </div>
-            <div className="p-4">
-              <h4 className="font-semibold text-lg mb-2 group-hover:text-orange-600 transition-colors">Lakshmi Girls PG</h4>
-              <div className="flex items-center gap-1 mb-2">
-                <MapPin className="w-4 h-4 text-gray-500" />
-                <p className="text-sm text-gray-600">Rohini Sector 17, Delhi</p>
-              </div>
-              <div className="flex items-center gap-1 mb-3">
-                <Clock className="w-4 h-4 text-gray-500" />
-                <p className="text-sm text-gray-600">2km from DTU • 15 min walk</p>
-              </div>
-              <div className="flex items-center justify-between mb-3">
+            <div className="flex-1">
+              <h4 className="font-semibold text-lg mb-1 group-hover:text-orange-600 transition-colors">Green Valley Girls</h4>
+              <p className="text-sm text-gray-600 mb-1 flex items-center gap-1">
+                <MapPin className="w-3 h-3" /> 0.8km from college
+              </p>
+              <div className="flex items-center justify-between">
+                <p className="font-semibold text-lg">₹7,500/mo</p>
                 <div className="flex text-yellow-400 text-sm">
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
-                  <span className="text-gray-600 ml-1 font-medium">4.8 (18)</span>
                 </div>
-                <p className="font-bold text-xl text-green-600">₹12,000</p>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3">
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">AC</span>
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">WiFi</span>
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">Kitchen</span>
-                <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">+4 more</span>
-              </div>
-              <p className="text-xs text-gray-500">Double sharing • ₹18,000 deposit</p>
             </div>
           </div>
 
-          <div className="group cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100">
-            <div className="relative h-48 overflow-hidden">
+          <div className="group cursor-pointer flex gap-4 p-4 rounded-xl hover:bg-gray-50 transition-all">
+            <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden rounded-xl shadow-md group-hover:shadow-xl transition-all duration-300">
               <img 
-                src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600" 
-                alt="Premium PG"
+                src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400" 
+                alt="Student Review"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy"
               />
-              <div className="absolute top-3 right-3 bg-purple-500 bg-opacity-90 text-white px-2 py-1 rounded-md text-xs font-medium">
-                Premium
-              </div>
-              <div className="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded-md text-xs font-medium">
-                Verified
-              </div>
             </div>
-            <div className="p-4">
-              <h4 className="font-semibold text-lg mb-2 group-hover:text-orange-600 transition-colors">Your-Space Rohini</h4>
-              <div className="flex items-center gap-1 mb-2">
-                <MapPin className="w-4 h-4 text-gray-500" />
-                <p className="text-sm text-gray-600">Rohini Sector 16, Delhi</p>
-              </div>
-              <div className="flex items-center gap-1 mb-3">
-                <Clock className="w-4 h-4 text-gray-500" />
-                <p className="text-sm text-gray-600">2.5km from DTU • 20 min walk</p>
-              </div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex text-yellow-400 text-sm">
+            <div className="flex-1 flex items-center">
+              <div>
+                <div className="flex text-yellow-400 text-sm mb-2">
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
-                  <span className="text-gray-600 ml-1 font-medium">4.9 (31)</span>
                 </div>
-                <p className="font-bold text-xl text-green-600">₹20,000</p>
+                <p className="text-sm text-gray-600 italic mb-1">"Amazing PG with great facilities!"</p>
+                <p className="text-sm font-semibold">- Arjun S.</p>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3">
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">Gym</span>
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">Cafe</span>
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">Laundry</span>
-                <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">+5 more</span>
-              </div>
-              <p className="text-xs text-gray-500">Single/Double sharing • ₹25,000 deposit</p>
             </div>
           </div>
         </div>
@@ -733,10 +450,7 @@ const App = () => {
             </div>
           </div>
 
-          <button 
-            onClick={() => setCurrentView('browse')}
-            className="bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors transform hover:scale-105 flex items-center gap-2 mx-auto mb-6"
-          >
+          <button className="bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors transform hover:scale-105 flex items-center gap-2 mx-auto mb-6">
             Start Your Search <ArrowRight className="w-5 h-5" />
           </button>
 
@@ -818,78 +532,8 @@ const App = () => {
           </div>
         </div>
       </footer>
-        </>
-      )}
-
-      {/* PG Browsing View */}
-      {currentView === 'browse' && (
-        <div className="min-h-screen bg-gray-50">
-          <div className="container mx-auto px-4 py-8">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Find Your Perfect PG</h1>
-              <p className="text-gray-600">Browse through our verified PG accommodations</p>
-            </div>
-            
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Filters Sidebar */}
-              <div className="lg:w-80 lg:flex-shrink-0">
-                <div className="lg:sticky lg:top-24">
-                  <Filters onFilter={handleFilter} />
-                </div>
-              </div>
-              
-              {/* PG Listings */}
-              <div className="flex-1 min-w-0">
-                <PGList 
-                  pgs={filteredPGs} 
-                  user={user}
-                  onInquiry={handleInquiry}
-                  onShowPGDetail={handleShowPGDetail}
-                  isLoading={isLoading}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* User Profile Modal */}
-      {showProfile && user && (
-        <UserProfile
-          user={user}
-          onClose={handleCloseProfile}
-          onUpdateProfile={handleUpdateProfile}
-        />
-      )}
-
-      {/* PG Detail Modal */}
-      {selectedPG && (
-        <PGDetail
-          pg={selectedPG}
-          user={user}
-          onClose={handleClosePGDetail}
-          onInquiry={handleInquiry}
-        />
-      )}
-
-      {/* Authentication Modals */}
-      {authModal === 'login' && (
-        <Login
-          onClose={() => setAuthModal(null)}
-          onLogin={handleLogin}
-          onSwitchToRegister={() => setAuthModal('register')}
-        />
-      )}
-
-      {authModal === 'register' && (
-        <Register
-          onClose={() => setAuthModal(null)}
-          onRegister={handleRegister}
-          onSwitchToLogin={() => setAuthModal('login')}
-        />
-      )}
     </div>
   );
 };
 
-export default App;
+export default PGRenterWebsite;

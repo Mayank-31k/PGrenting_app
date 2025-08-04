@@ -2,7 +2,18 @@ import React from 'react';
 import PGCard from './PGCard';
 import './PGList.css';
 
-const PGList = ({ pgs }) => {
+const PGList = ({ pgs, user, onInquiry, onShowPGDetail, isLoading = false }) => {
+  if (isLoading) {
+    return (
+      <div className="pg-list">
+        <div className="no-results">
+          <h3>Loading PGs...</h3>
+          <p>Please wait while we fetch the latest accommodations.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (pgs.length === 0) {
     return (
       <div className="pg-list">
@@ -21,7 +32,13 @@ const PGList = ({ pgs }) => {
       </div>
       <div className="pg-grid">
         {pgs.map(pg => (
-          <PGCard key={pg.id} pg={pg} />
+          <PGCard 
+            key={pg.id} 
+            pg={pg} 
+            user={user}
+            onInquiry={onInquiry}
+            onShowPGDetail={onShowPGDetail}
+          />
         ))}
       </div>
     </div>

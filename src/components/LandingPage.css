@@ -362,6 +362,5 @@
 
 /* Import the modern styles */
 @import './LandingPageModern.css';
-@import './LandingPageProfessional.css';
 
 /* Mobile styles are now in LandingPageModern.css */
