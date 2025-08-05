@@ -41,7 +41,7 @@ const App = () => {
         queryParams.append('facilities', filters.facilities.join(','));
       }
       
-      const url = `http://localhost:5004/api/pgs${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+      const url = `http://localhost:5001/api/pgs${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
       const response = await fetch(url);
       
       if (!response.ok) {

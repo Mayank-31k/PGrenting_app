@@ -12,7 +12,7 @@ const PORT = 5001; // Fixed port for demo
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004'],
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004', 'http://localhost:3005', 'http://localhost:3006', 'http://localhost:3007'],
   credentials: true
 }));
 app.use(express.json());
@@ -299,116 +299,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Register with email/password
-app.post('/api/auth/register', async (req, res) => {
-  try {
-    const { name, email, password, confirmPassword } = req.body;
-
-    // Validation
-    if (!name || !email || !password || !confirmPassword) {
-      return res.status(400).json({ error: 'All fields are required' });
-    }
-
-    if (password !== confirmPassword) {
-      return res.status(400).json({ error: 'Passwords do not match' });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
-    }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'User with this email already exists' });
-    }
-
-    // Hash password
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // Create new user
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword,
-      provider: 'local'
-    });
-
-    await user.save();
-
-    // Generate token
-    const token = generateToken(user._id);
-
-    res.status(201).json({
-      message: 'User created successfully',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        provider: user.provider,
-        createdAt: user.createdAt
-      }
-    });
-
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ error: 'Server error during registration' });
-  }
-});
-
-// Login with email/password
-app.post('/api/auth/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Validation
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
-    }
-
-    // Find user
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: 'Invalid email or password' });
-    }
-
-    // Check if user registered with Google
-    if (user.provider === 'google') {
-      return res.status(400).json({ error: 'This email is registered with Google. Please use Google Sign-In.' });
-    }
-
-    // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-      return res.status(400).json({ error: 'Invalid email or password' });
-    }
-
-    // Update last login
-    user.lastLogin = new Date();
-    await user.save();
-
-    // Generate token
-    const token = generateToken(user._id);
-
-    res.json({
-      message: 'Login successful',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        provider: user.provider,
-        lastLogin: user.lastLogin
-      }
-    });
-
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Server error during login' });
-  }
-});
+// Duplicate routes removed - using the ones defined earlier
 
 // Google OAuth Login/Register (Temporarily Disabled)
 /* app.post('/api/auth/google', async (req, res) => {

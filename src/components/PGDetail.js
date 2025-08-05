@@ -56,7 +56,7 @@ const PGDetail = ({ pg, user, onClose, onInquiry }) => {
         return;
       }
 
-      const response = await fetch('http://localhost:5004/api/inquiries', {
+      const response = await fetch('http://localhost:5001/api/inquiries', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const PGDetail = ({ pg, user, onClose, onInquiry }) => {
       console.error('Inquiry submission error:', error);
       
       if (error.message.includes('Failed to fetch')) {
-        alert('Cannot connect to server. Please make sure the backend server is running on http://localhost:5004');
+        alert('Cannot connect to server. Please make sure the backend server is running on http://localhost:5001');
       } else if (error.message.includes('401')) {
         alert('Authentication failed. Please login again.');
       } else if (error.message.includes('400')) {

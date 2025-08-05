@@ -58,7 +58,7 @@ const UserProfile = ({ user, onClose, onUpdateProfile }) => {
       }
 
       // Make API call to update profile
-      const response = await fetch('http://localhost:5004/api/auth/profile', {
+      const response = await fetch('http://localhost:5001/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ const UserProfile = ({ user, onClose, onUpdateProfile }) => {
     setLoadingInquiries(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5004/api/inquiries', {
+      const response = await fetch('http://localhost:5001/api/inquiries', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

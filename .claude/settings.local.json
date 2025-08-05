@@ -21,7 +21,10 @@
       "Bash(\"C:\\Program Files\\nodejs\\node.exe\" server/server.js)",
       "Bash(\"C:\\Program Files\\nodejs\\node.exe\" server/simple-server.js)",
       "Bash(npm run server:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "Bash(start /b node:*)",
+      "Bash(npx:*)"
     ],
     "deny": []
   }

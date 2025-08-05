@@ -31,7 +31,7 @@ const Register = ({ onClose, onRegister, onSwitchToLogin }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:5004/api/auth/register', {
+      const response = await fetch('http://localhost:5001/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const Register = ({ onClose, onRegister, onSwitchToLogin }) => {
       signInWithGoogle(async (googleUser) => {
         try {
           // Send Google credential to backend
-          const response = await fetch('http://localhost:5004/api/auth/google', {
+          const response = await fetch('http://localhost:5001/api/auth/google', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
