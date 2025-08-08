@@ -23,7 +23,7 @@ const Login = ({ onClose, onLogin, onSwitchToRegister }) => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const Login = ({ onClose, onLogin, onSwitchToRegister }) => {
       signInWithGoogle(async (googleUser) => {
         try {
           // Send Google credential to backend
-          const response = await fetch('http://localhost:5001/api/auth/google', {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/google`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

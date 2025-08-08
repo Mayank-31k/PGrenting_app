@@ -24,7 +24,11 @@
       "Bash(grep:*)",
       "Bash(curl:*)",
       "Bash(start /b node:*)",
-      "Bash(npx:*)"
+      "Bash(npx:*)",
+      "Bash(npm ls:*)",
+      "Bash(dir .env*)",
+      "Bash(powershell:*)",
+      "Bash(del test-api.js)"
     ],
     "deny": []
   }
