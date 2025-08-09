@@ -1,18 +1,16 @@
 @echo off
-echo Killing existing processes...
-taskkill /F /IM node.exe 2>nul
+echo Starting PG Renter Next.js Application...
+echo.
 
-echo Waiting for processes to stop...
-timeout /t 3 /nobreak >nul
+REM Start the authentication server in the background
+echo Starting authentication server on port 5001...
+start /b "Auth Server" cmd /c "cd /d %~dp0 && npm run server"
 
-echo Starting auth server...
-cd /d "C:\Users\MAYANK\OneDrive\Desktop\pgRenter"
-start /min cmd /c "node auth-server.js"
-
-echo Waiting for auth server to start...
+REM Wait a bit for auth server to start
 timeout /t 5 /nobreak >nul
 
-echo Starting React app...
-set PORT=3007
-set BROWSER=none
-"C:\Program Files\nodejs\node.exe" "./node_modules/react-scripts/scripts/start.js"
+REM Start the Next.js development server
+echo Starting Next.js development server...
+npm run dev
+
+pause

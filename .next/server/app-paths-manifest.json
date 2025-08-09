@@ -1,0 +1,8 @@
+{
+  "/api/pgs/route": "app/api/pgs/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/user/inquiries/route": "app/api/user/inquiries/route.js",
+  "/api/inquiries/route": "app/api/inquiries/route.js",
+  "/page": "app/page.js",
+  "/browse/page": "app/browse/page.js"
+}

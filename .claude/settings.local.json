@@ -28,7 +28,19 @@
       "Bash(npm ls:*)",
       "Bash(dir .env*)",
       "Bash(powershell:*)",
-      "Bash(del test-api.js)"
+      "Bash(del test-api.js)",
+      "Bash(mkdir:*)",
+      "Bash(dir)",
+      "Bash(copy auth-server.js temp-backup )",
+      "Bash(copy .env temp-backup )",
+      "Bash(xcopy:*)",
+      "Bash(true)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(timeout:*)",
+      "Bash(npm run build:*)",
+      "Bash(/dev/null)"
     ],
     "deny": []
   }

@@ -1,161 +1,169 @@
-# PG Renter - Complete Application
+# PG Renter - Next.js Application
 
-A modern web application for PG (Paying Guest) rentals designed for college students, built with React.js and Node.js.
-
-## 🎯 Features Completed
-
-### 🎨 Modern UI Design
-- ✅ Clean, modern design inspired by furniture website aesthetic
-- ✅ Responsive layout for all devices
-- ✅ Professional color scheme and typography
-- ✅ Grid-based layouts and modern CSS
-
-### 🔐 Authentication System
-- ✅ Local email/password registration and login
-- ✅ Google OAuth integration
-- ✅ JWT-based authentication
-- ✅ Secure password hashing with bcrypt
-- ✅ Session management
-
-### 🏠 PG Listings & Details
-- ✅ Comprehensive PG listing display
-- ✅ Detailed PG view with modal interface
-- ✅ Property information, facilities, and testimonials
-- ✅ Image galleries and location details
-- ✅ Price and contact information
-
-### 📧 Inquiry System
-- ✅ User inquiry form for interested PGs
-- ✅ Email notifications to PG owner (mayankkumar31k@gmail.com)
-- ✅ HTML-formatted emails with user details
-- ✅ Inquiry history for users
-- ✅ Real-time inquiry tracking
-
-### 👤 User Profile Management
-- ✅ User profile viewing and editing
-- ✅ Tab-based interface (Profile & Inquiries)
-- ✅ Inquiry history with detailed tracking
-- ✅ Account information management
-
-### 🛠 Technical Implementation
-- ✅ React.js frontend with modern hooks
-- ✅ Node.js/Express.js backend API
-- ✅ MongoDB integration (with fallback in-memory storage)
-- ✅ Nodemailer for email functionality
-- ✅ CORS configuration
-- ✅ Environment variable management
+A modern PG accommodation finder built with Next.js 15, TypeScript, and Tailwind CSS. Find verified student accommodations with advanced filtering, real-time search, and secure authentication.
 
 ## 🚀 Quick Start
 
-### Development Mode
-```bash
-# Install dependencies
-npm install
+### Prerequisites
+- Node.js 18+ installed
+- MongoDB connection (configured in `.env.local`)
 
-# Start development servers (both frontend and backend)
-npm run dev
+### Installation & Running
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Start both servers:**
+   ```bash
+   # On Windows
+   start-both.bat
+   
+   # Or manually:
+   # Terminal 1 - Start auth server
+   npm run server
+   
+   # Terminal 2 - Start Next.js
+   npm run dev
+   ```
+
+3. **Access the application:**
+   - Frontend: http://localhost:3000
+   - API: http://localhost:5001
+
+## 📁 Project Structure
+
+```
+pgRenter/
+├── src/
+│   ├── app/                 # App Router pages
+│   │   ├── page.tsx        # Home page
+│   │   ├── browse/         # PG listing page
+│   │   ├── pg/[id]/        # Dynamic PG detail page
+│   │   ├── layout.tsx      # Root layout
+│   │   └── globals.css     # Global styles
+│   ├── components/         # Reusable components
+│   │   ├── ui/            # UI components
+│   │   ├── Login.tsx      # Login modal
+│   │   └── Register.tsx   # Registration modal
+│   ├── hooks/             # Custom hooks
+│   ├── lib/               # Utilities
+│   └── data/              # Sample data & types
+├── .env.local             # Environment variables
+├── next.config.js         # Next.js configuration
+├── tailwind.config.js     # Tailwind CSS config
+└── package.json           # Dependencies & scripts
 ```
 
-### Production Mode
+## 🔄 Migration Changes
+
+### From React.js to Next.js:
+- **Routing**: React Router → Next.js App Router
+- **State Management**: Client-side only → Server/Client components
+- **Environment Variables**: `REACT_APP_*` → `NEXT_PUBLIC_*`
+- **Image Optimization**: `<img>` → Next.js `<Image>`
+- **File Structure**: `/src` → `/src/app` (App Router)
+- **TypeScript**: Enhanced with proper types
+
+### Key Features Migrated:
+- ✅ Landing page with hero section
+- ✅ PG browsing with filters
+- ✅ Dynamic PG detail pages
+- ✅ Authentication (Login/Register)
+- ✅ Google OAuth integration
+- ✅ Responsive design
+- ✅ API integration with external auth server
+
+## 🔧 Environment Variables
+
+Create `.env.local` file:
+
+```env
+# Database
+MONGODB_URI=your_mongodb_connection_string
+
+# JWT
+JWT_SECRET=your_jwt_secret
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# API
+NEXT_PUBLIC_API_URL=http://localhost:5001
+```
+
+## 🌐 Available Routes
+
+- `/` - Home page
+- `/browse` - Browse all PGs with filters
+- `/pg/[id]` - Individual PG details
+- `/about` - About page (placeholder)
+- `/contact` - Contact page (placeholder)
+
+## 🔑 Authentication
+
+The app uses JWT-based authentication with:
+- Email/password registration & login
+- Google OAuth integration
+- Persistent sessions via localStorage
+- Protected routes support
+
+## 📱 Responsive Design
+
+- Mobile-first approach
+- Tailwind CSS for styling
+- Optimized for all screen sizes
+- Touch-friendly interface
+
+## 🎯 Performance Optimizations
+
+- Next.js Image optimization
+- Automatic code splitting
+- Static generation where possible
+- Optimized bundle size
+
+## 🚀 Production Deployment
+
 ```bash
 # Build the application
 npm run build
 
 # Start production server
-npm run production
+npm start
 ```
 
-## 📧 Email Configuration
+For deployment platforms like Vercel, Netlify, or similar:
+1. Connect your repository
+2. Set environment variables
+3. Deploy automatically
 
-To enable email functionality:
+## 📊 API Integration
 
-1. **Gmail Setup**:
-   - Enable 2-Factor Authentication
-   - Generate App Password in Google Account settings
-   - Add credentials to `.env` file
+The app integrates with the existing Express.js authentication server:
+- User registration & login
+- PG listings from MongoDB
+- Inquiry submissions
+- Google OAuth handling
 
-2. **Environment Variables**:
-   ```env
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASS=your-gmail-app-password
-   EMAIL_TO=mayankkumar31k@gmail.com
-   ```
+## 🔮 Future Enhancements
 
-## 🔧 Configuration
+- Server-side rendering for better SEO
+- API routes for backend functionality
+- Advanced filtering & search
+- Real-time chat integration
+- Payment processing
+- Admin dashboard
 
-Copy `.env.example` to `.env` and configure:
-- Database connection (MongoDB)
-- JWT secret key
-- Google OAuth credentials
-- Email settings
-- Server port
+## 🤝 Contributing
 
-## 📱 User Journey
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -m 'Add feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit pull request
 
-1. **Landing Page**: Modern design with PG search functionality
-2. **Registration**: Email or Google OAuth signup
-3. **Browse PGs**: Filter and search available properties
-4. **View Details**: Comprehensive PG information modal
-5. **Submit Inquiry**: Authenticated users can express interest
-6. **Track Inquiries**: View inquiry history in user profile
-7. **Email Notification**: PG owner receives detailed inquiry emails
+## 📄 License
 
-## 🎯 Production Ready Features
-
-- ✅ Environment-based configuration
-- ✅ Security best practices implemented
-- ✅ Error handling and validation
-- ✅ Responsive design for all devices
-- ✅ Production deployment documentation
-- ✅ Email notification system
-- ✅ User authentication and authorization
-- ✅ Data persistence and inquiry tracking
-
-## 📧 Email Notifications
-
-When a user submits an inquiry, the PG owner (mayankkumar31k@gmail.com) receives:
-
-- Student contact information
-- PG details they're interested in
-- Personal message from student
-- Student registration date
-- Inquiry timestamp
-
-## 🔒 Security Features
-
-- Password hashing with bcrypt
-- JWT token authentication
-- Input validation and sanitization
-- CORS protection
-- Secure environment variable management
-- Google OAuth integration
-
-## 📱 Responsive Design
-
-- Mobile-first approach
-- Tablet and desktop optimized
-- Touch-friendly interfaces
-- Accessible navigation
-- Modern CSS Grid and Flexbox
-
-## 🎨 Design Highlights
-
-- Clean, minimalist aesthetic
-- Professional color palette
-- Modern typography (system fonts)
-- Subtle animations and transitions
-- Card-based layouts
-- Modal interfaces for detailed views
-
-## 📞 Support
-
-For technical questions or deployment assistance, refer to:
-- `PRODUCTION_SETUP.md` for deployment guide
-- `.env.example` for configuration reference
-- Contact development team for custom modifications
-
----
-
-**Status**: ✅ **Production Ready**  
-**Last Updated**: January 2025  
-**Version**: 1.0.0
+This project is licensed under the MIT License.

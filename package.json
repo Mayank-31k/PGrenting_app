@@ -1,54 +1,38 @@
 {
-  "name": "pg-renter",
-  "version": "1.0.0",
-  "description": "PG Rental website for college students",
-  "main": "index.js",
+  "name": "pgrenter-nextjs",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "server": "node auth-server.js",
-    "dev": "concurrently \"npm run server\" \"npm start\"",
-    "production": "node start.js",
-    "heroku-postbuild": "npm run build"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "concurrently": "^9.2.0",
-    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0",
     "google-auth-library": "^10.2.0",
     "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.535.0",
+    "lucide-react": "^0.539.0",
     "mongodb": "^6.18.0",
     "mongoose": "^8.17.0",
-    "node-fetch": "^2.7.0",
-    "nodemailer": "^6.9.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "^5.0.1",
+    "next": "15.1.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "tailwind-merge": "^3.3.1"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.1.0",
-    "autoprefixer": "^10.4.21",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "15.1.3",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5"
   }
 }
