@@ -40,7 +40,10 @@
       "Bash(npm uninstall:*)",
       "Bash(timeout:*)",
       "Bash(npm run build:*)",
-      "Bash(/dev/null)"
+      "Bash(/dev/null)",
+      "Bash(git rev-list:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }
