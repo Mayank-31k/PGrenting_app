@@ -18,13 +18,13 @@ export async function GET(request: NextRequest) {
     }
 
     const token = authHeader.substring(7);
-    let decoded;
+    let decoded: { userId: string; email?: string };
 
     console.log('Received token for inquiry fetch:', token.substring(0, 20) + '...');
 
     try {
       // Try JWT first
-      decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+      decoded = jwt.verify(token, JWT_SECRET) as { userId: string; email?: string };
       console.log('JWT decoded successfully:', decoded);
     } catch (error) {
       // Try base64 decode for demo tokens

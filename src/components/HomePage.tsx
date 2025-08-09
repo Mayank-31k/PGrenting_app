@@ -16,6 +16,7 @@ export default function HomePage() {
   const isHydrated = useHydration();
   const {
     user,
+    setUser,
     userInquiries,
     setUserInquiries,
     showUserProfile,

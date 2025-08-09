@@ -8,12 +8,6 @@
     "src/app/api/*/route.ts": {
       "maxDuration": 10
     }
-  },
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret",
-    "GOOGLE_CLIENT_ID": "@google_client_id",
-    "GOOGLE_CLIENT_SECRET": "@google_client_secret",
-    "NODE_ENV": "production"
   }
+  
 }
